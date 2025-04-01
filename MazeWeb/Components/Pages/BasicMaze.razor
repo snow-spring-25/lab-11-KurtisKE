@@ -5,23 +5,21 @@
 <h1>Enter your name, if your dare...</h1>
 <input type="text" @bind="name" />
 <button @onclick="GenerateMaze">Generate Maze</button>
+<p>@pathOutOfMaze</p>
 
 @code
 {
     string name;
     string pathOutOfMaze = " ";
 
+
     private void GenerateMaze()
     {
         MazeCell startLocation = MazeUtilities.mazeFor(name);
 
-        if (MazeUtilities.isPathToFreedom(startLocation, pathOutOfMaze))
-        {
-            Console.WriteLine("Congratulations! You've found a way out of your labyrinth.");
-        }
-        else
-        {
-            Console.WriteLine("Sorry, but you're still stuck in your labyrinth.");
-        }
+        List<NodeLink> path = MazeUtilities.ExploreMaze(startLocation);
+        IEnumerable<string> instructions = path.Select(l => l.Label);
+        
+        pathOutOfMaze = string.Join(", ", instructions);
     }
 }
