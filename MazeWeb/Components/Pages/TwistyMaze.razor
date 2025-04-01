@@ -1,0 +1,26 @@
+@page "/TwistyMaze"
+@using labyrinth
+@using MermaidJS.Blazor
+
+
+<h1>Enter your name, if your dare...</h1>
+<input type="text" @bind="name" />
+<button @onclick="twistyMazeFor">Generate Maze</button>
+<MermaidDiagram Definition=@pathOutOfTwistyMaze />
+
+@code
+{
+    string name;
+    string pathOutOfTwistyMaze = " ";
+
+
+    private void twistyMazeFor()
+    {
+        MazeCell startLocation = MazeUtilities.twistyMazeFor(name);
+
+        var path = MazeUtilities.ExploreMaze(startLocation);
+        var instructions = path.Select(node => $"{node.From.Id}[\"{node.From}\"]--{node.Label}-->{node.To.Id}[\"{node.To}\"]");
+        pathOutOfTwistyMaze = "graph TD\n" + string.Join("\n", instructions);
+        Console.WriteLine(pathOutOfTwistyMaze);
+    }
+}
